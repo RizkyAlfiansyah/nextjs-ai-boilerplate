@@ -1,25 +1,19 @@
 "use client";
 
 import { Globe } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/i18n/client";
-import { languages } from "@/i18n/settings";
+import { routing } from "@/i18n/routing";
 import { cn } from "@/utils/utils";
 
-export function LanguageSwitcher({ lng }: { lng: string }) {
-  const { t, i18n } = useTranslation(lng, "language_switcher");
-  const router = useRouter();
+export function LanguageSwitcher() {
+  const t = useTranslations("LanguageSwitcher");
+  const locale = useLocale();
 
   const handleLanguageChange = (language: string) => {
-    i18n.changeLanguage(language);
-    // Manually update the cookie before refreshing to ensure the server sees the new language
-    // The useEffect in i18n/client.ts is too slow (runs after render) for immediate router.refresh()
-    // biome-ignore lint/suspicious/noDocumentCookie: cookie needed for i18n immediate switch
-    document.cookie = `i18next=${language};path=/`;
-    // Since we are using cookie-based routing with rewrites, we need to refresh the page
-    // to let the server rewrite the request to the new language folder
-    router.refresh();
+    // biome-ignore lint: Required for client-side locale switching
+    document.cookie = `NEXT_LOCALE=${language}; path=/; max-age=31536000; SameSite=Lax`;
+    globalThis.location.reload();
   };
 
   return (
@@ -30,12 +24,12 @@ export function LanguageSwitcher({ lng }: { lng: string }) {
       </div>
       <p className="text-muted-foreground text-sm">{t("description")}</p>
       <div className="flex flex-wrap gap-2">
-        {languages.map((language) => (
+        {routing.locales.map((language) => (
           <Button
             key={language}
             onClick={() => handleLanguageChange(language)}
             size="sm"
-            variant={i18n.resolvedLanguage === language ? "default" : "outline"}
+            variant={locale === language ? "default" : "outline"}
           >
             {t(`languages.${language}`)}
           </Button>
@@ -43,7 +37,7 @@ export function LanguageSwitcher({ lng }: { lng: string }) {
       </div>
       <div className="mt-2 text-muted-foreground text-xs">
         {t("current_language")}:{" "}
-        <span className="font-medium font-mono">{i18n.resolvedLanguage}</span>
+        <span className="font-medium font-mono">{locale}</span>
       </div>
     </div>
   );

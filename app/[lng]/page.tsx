@@ -1,20 +1,15 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/features/language-switcher/language-switcher";
-import { useTranslation } from "@/i18n/server";
 
-export default async function Home({
-  params,
-}: {
-  params: Promise<{ lng: string }>;
-}) {
-  const { lng } = await params;
-  const { t } = await useTranslation(lng);
+export default async function Home() {
+  const t = await getTranslations();
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background p-8 text-foreground">
       <div className="absolute top-4 right-4">
-        <LanguageSwitcher lng={lng} />
+        <LanguageSwitcher />
       </div>
 
       <div className="flex flex-col items-center gap-4 text-center">

@@ -7,5 +7,16 @@
     "secondary": "次要按钮",
     "outline": "轮廓按钮",
     "destructive": "破坏性按钮"
+  },
+  "LanguageSwitcher": {
+    "title": "语言切换器",
+    "description": "切换语言以测试国际化功能。",
+    "current_language": "当前语言",
+    "languages": {
+      "en": "英语",
+      "zh": "中文",
+      "es": "西班牙语",
+      "id": "印尼语"
+    }
   }
 }

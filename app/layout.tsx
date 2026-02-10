@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getLocale, getMessages } from "next-intl/server";
+import { I18nProvider } from "@/components/providers/i18n-provider";
 import { ReactQueryProvider } from "@/components/providers/react-query-provider";
-import { languages } from "../../i18n/settings";
-import "../globals.css";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,24 +20,22 @@ export const metadata: Metadata = {
   description: "IELTS Speaking Practice",
 };
 
-export async function generateStaticParams() {
-  return languages.map((lng) => ({ lng }));
-}
-
 export default async function RootLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ lng: string }>;
 }>) {
-  const { lng } = await params;
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang={lng}>
+    <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <I18nProvider locale={locale} messages={messages}>
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+        </I18nProvider>
       </body>
     </html>
   );
