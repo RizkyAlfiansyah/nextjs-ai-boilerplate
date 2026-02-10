@@ -1,0 +1,11 @@
+{
+  "title": "Language Switcher",
+  "description": "Switch between available languages to test i18n.",
+  "current_language": "Current Language",
+  "languages": {
+    "en": "English",
+    "zh": "Chinese",
+    "es": "Spanish",
+    "id": "Indonesian"
+  }
+}

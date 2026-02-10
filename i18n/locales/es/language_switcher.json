@@ -1,0 +1,11 @@
+{
+  "title": "Cambiar Idioma",
+  "description": "Cambie entre los idiomas disponibles para probar i18n.",
+  "current_language": "Idioma Actual",
+  "languages": {
+    "en": "Inglés",
+    "zh": "Chino",
+    "es": "Español",
+    "id": "Indonesio"
+  }
+}

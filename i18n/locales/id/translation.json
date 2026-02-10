@@ -1,0 +1,11 @@
+{
+  "title": "TalkMate IELTS",
+  "welcome": "Selamat datang di TalkMate IELTS",
+  "description": "Shadcn UI sekarang telah terinstal dan dikonfigurasi.",
+  "buttons": {
+    "default": "Tombol Default",
+    "secondary": "Sekunder",
+    "outline": "Garis Luar",
+    "destructive": "Destruktif"
+  }
+}

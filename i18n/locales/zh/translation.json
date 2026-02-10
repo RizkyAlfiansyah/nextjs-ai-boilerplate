@@ -1,0 +1,11 @@
+{
+  "title": "TalkMate 雅思",
+  "welcome": "欢迎来到 TalkMate 雅思",
+  "description": "Shadcn UI 已安装并配置完成。",
+  "buttons": {
+    "default": "默认按钮",
+    "secondary": "次要按钮",
+    "outline": "轮廓按钮",
+    "destructive": "破坏性按钮"
+  }
+}
