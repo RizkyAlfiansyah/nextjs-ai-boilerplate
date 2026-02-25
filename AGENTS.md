@@ -78,6 +78,7 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 
 - **Styling**:
   - Use **Tailwind CSS** for utility classes.
+  - Use **shadcn/ui** component library for pre-built UI components.
   - Use Tailwind CSS v4 standardized best practices (e.g., `bg-background` instead of `bg-[var(--background)]`).
   - **Always** use the `cn()` utility function (from `@/utils/utils`) when applying `className` props to ensure consistency and mergeability.
 - **Responsive Design**: Utilize Tailwind's responsive utilities (`sm:`, `md:`, `lg:`) for mobile-first design.
