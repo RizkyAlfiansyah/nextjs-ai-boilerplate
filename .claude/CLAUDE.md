@@ -234,3 +234,36 @@ When new rules or updates are assigned that affect agent documentation:
    - Use the exact content provided in the assignment
 
 This rule ensures centralized documentation management while preventing unnecessary updates to skill-specific agent files.
+
+---
+
+# UI Architecture & Folder Structure
+
+This project uses a **Feature-Based Fragment Architecture** for managing the UI. UI code is organized across three main directories to keep routing lean and components modular.
+
+### 1. `app/` (Routing & Layouts)
+Strictly for Next.js App Router routing.
+- **Rule:** Keep these files extremely **lean**.
+- **Purpose:** Export `metadata` for SEO, set up layouts/wrappers, fetch server-side data (if needed), and render a "Fragment" component. Do not put complex UI logic or heavy HTML structure directly inside `app/[route]/page.tsx`.
+
+### 2. `core/ui/` (Shared/Generic UI Elements)
+Holds all generic, reusable UI building blocks that don't belong to any specific domain or feature.
+- `core/ui/components/`: Small, atomic design components (e.g., `button.tsx`, `input.tsx`, `modal.tsx`, `tabs.tsx`).
+- `core/ui/fragments/`: Complex layout structures used across multiple pages but not tied to a specific business domain (e.g., `StaticPage.fragment.tsx` for legal pages).
+
+### 3. `feature/` (Domain-Specific UI)
+Where complex, feature-specific page UI lives. Grouped by business domain (e.g., `blog`, `result`, `generation`).
+- `feature/<domain-name>/fragments/`: Main "Page" or section components. `app/page.tsx` imports and returns these.
+- `feature/<domain-name>/components/`: UI pieces strictly meant for this feature only.
+- `feature/<domain-name>/container/`: (Optional) Components handling specific state, API hooks, or heavy logic inside a fragment without cluttering the UI rendering.
+
+*(Note: Legacy components currently reside in the `components/` folder and are actively being migrated to `core/ui/` or `feature/`.)*
+
+### UI Development Workflow Example (e.g., New Pricing Page)
+
+1. **Create the App Route (`app/pricing/page.tsx`)**: 
+   Make it lean, exporting metadata and returning the fragment.
+2. **Create the Fragment (`feature/pricing/fragments/pricing-page/PricingPage.fragment.tsx`)**: 
+   Assemble the page layout and feature-specific components here.
+3. **Build the Components (`feature/pricing/components/...`)**: 
+   Build specific components (e.g., `PricingTable.tsx`) inside the feature folder. Use generic elements (like buttons) from `core/ui/`.
