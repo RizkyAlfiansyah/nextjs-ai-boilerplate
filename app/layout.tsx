@@ -16,8 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TalkMate IELTS",
-  description: "IELTS Speaking Practice",
+  title: "Next.js AI Boilerplate",
+  description:
+    "Next.js AI Boilerplate is a Next.js project that provides a boilerplate for building AI applications.",
 };
 
 export default async function RootLayout({
