@@ -209,3 +209,28 @@ Server-side calls happen on your Node.js server *before* the HTML is sent to the
 *   If the data is required for the page to display properly when it first loads (like a blog article or legal text), make a **Server-Side** call directly in the page component or via your `prefetch` queries.
 
 Most formatting and common issues are automatically fixed by Biome. Run `bun x ultracite fix` before committing to ensure compliance.
+
+---
+
+# Agent Documentation Update Rule
+
+**Effective Immediately:**
+
+When new rules or updates are assigned that affect agent documentation:
+
+1. **Only update these specific files:**
+   - `/Users/Ren/Documents/work/ren-architec/next-ai-boilerplate/AGENTS.md` (root level)
+   - `/Users/Ren/Documents/work/ren-architec/next-ai-boilerplate/.claude/CLAUDE.md` 
+   - `/Users/Ren/Documents/work/ren-architec/next-ai-boilerplate/GEMINI.md`
+
+2. **Do NOT update:**
+   - Any files in `.agents/skills/*/AGENTS.md`
+   - Any other agent-specific markdown files in subdirectories
+
+3. **Process:**
+   - Read the new rule/content from the assignment
+   - Update only the three specified root-level files
+   - Maintain consistency across all three files
+   - Use the exact content provided in the assignment
+
+This rule ensures centralized documentation management while preventing unnecessary updates to skill-specific agent files.
