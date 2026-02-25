@@ -143,4 +143,69 @@ Biome's linter will catch most issues automatically. Focus your attention on:
 
 ---
 
+# API Architecture & Conventions
+
+This project utilizes a highly modular **Service-Model Architecture** to handle API calls. This cleanly separates data fetching, type definitions, state management, and the UI.
+
+## Directory Structure
+
+### 1. `core/models/` (Data Structures & Typing)
+This directory holds the TypeScript interfaces for your data. You follow a strict typing convention where you separate the raw API responses from your clean frontend domain models.
+*   **Convention:** Define `IRaw...` interfaces (e.g., `IRawBlogListResponse`) for exactly what the API returns, and `I...` interfaces (e.g., `IBlogListResponse`) for what the UI component will actually consume. Avoid using `any`.
+
+### 2. `core/services/` (Fetching Logic)
+This folder contains the actual API functions that execute HTTP requests (using Axios or Fetch).
+*   **Convention:** Service functions are purely responsible for making the network request, catching errors, and returning the data. Use TypeScript generics here (e.g., `axios.get<IRawResponse>`) to ensure the returned data strictly matches the raw models defined in `core/models/`.
+*   **Custom Builders:** Domain-specific logic, like payload builders or retry logic (e.g., `buildRetryPayload.ts`), lives alongside these services rather than cluttering up the UI components.
+
+### 3. `core/query/` (State Management & Caching)
+This directory holds data fetching hooks, built on top of React Query (`@tanstack/react-query`).
+*   **Convention:** These hooks import the functions from `core/services/` and wrap them in `useQuery` or `useMutation`. This abstracts away loading states, error handling, caching, and background refetching from your UI components.
+
+### 4. `app/api/` (Backend Routes)
+Because you are using Next.js App Router, any backend API routes that need to run securely on the server (like handling file uploads to Backblaze B2 or talking to the Monday.com API with secret keys) are kept here.
+
+---
+
+## Client-Side vs. Server-Side API Calls
+
+Because this project uses the Next.js App Router and React Query, the difference between server-side and client-side API calls is determined by **where the component renders** and **how you handle the data state**.
+
+### 1. Client-Side API Calls
+Client-side calls happen directly in the user's browser after the page has loaded. Use these for highly interactive features, form submissions, or polling for updates (like checking a generation status).
+
+*   **Where it happens:** In components marked with the `"use client"` directive at the top of the file.
+*   **How it's built:**
+    *   Use the hooks inside **`core/query/`** (e.g., `useJobStatus`, `useRequestChangeMutation`).
+    *   These hooks rely on `@tanstack/react-query` to handle loading states (`isLoading`), caching, and background refetching.
+    *   They call the raw fetcher functions in **`core/services/`**.
+*   **Example use case:** When a user clicks a "Generate 3D Model" button, a React Query `useMutation` (client-side) sends the request. You then use `useJobStatus` (client-side) to poll the API every few seconds to check if the 3D model is ready.
+
+### 2. Server-Side API Calls
+Server-side calls happen on your Node.js server *before* the HTML is sent to the user's browser. Use these for SEO, fast initial page loads, and accessing secure secrets (like your Monday.com or Backblaze B2 API keys) that shouldn't be exposed to the browser.
+
+*   **Where it happens:**
+    1.  **Server Components:** Any React component in `app/` that does *not* have `"use client"`. These components can be `async` functions.
+    2.  **Route Handlers:** The files located in **`app/api/.../route.ts`**.
+*   **How it's built:**
+    *   **Direct Service Call:** You can import a function from **`core/services/`** directly into an `async` Server Component and `await` it.
+    *   **React Query Prefetching:** Use functions like **`core/query/content/prefetchGetContent.ts`**. This is a classic Next.js 16 pattern where you make a server-side API call to pre-fetch the data on the server, load it into a React Query "dehydrated state", and pass it to the client so the page loads instantly with data.
+*   **Example use case:** Fetching blog posts (`fetchGetBlogList`) or legal pages before the page renders. This ensures search engines can read the content (SEO) and the user doesn't see a loading spinner.
+
+---
+
+### Summary Table
+
+| Feature | Client-Side API Call (`"use client"`) | Server-Side API Call (Server Component / `app/api`) |
+| :--- | :--- | :--- |
+| **Primary Tool** | `core/query/` hooks (`useQuery`, `useMutation`) | `async`/`await` direct calls or `prefetch...` |
+| **Underlying Fetcher** | `core/services/` functions | `core/services/` functions |
+| **Best For** | Polling, mutations (submitting forms), user interactions. | SEO-heavy pages, initial data loads, hiding API keys. |
+| **Can access Env Vars?** | Only `NEXT_PUBLIC_...` variables. | Yes, all secret API keys. |
+| **Loading State** | Handled by React Query (`isLoading`). | Handled by Next.js `loading.tsx` or Suspense. |
+
+### Rule of Thumb
+*   If the data changes based on immediate user interaction (like clicking a button or typing in a form), make a **Client-Side** call using `core/query/`.
+*   If the data is required for the page to display properly when it first loads (like a blog article or legal text), make a **Server-Side** call directly in the page component or via your `prefetch` queries.
+
 Most formatting and common issues are automatically fixed by Biome. Run `bun x ultracite fix` before committing to ensure compliance.
