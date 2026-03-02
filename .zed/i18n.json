@@ -1,6 +1,4 @@
 {
-  "localePaths": [
-    "messages"
-  ],
+  "localePaths": ["messages"],
   "sourceLocale": "en"
 }

@@ -1,0 +1,8 @@
+{
+  "mcpServers": [
+    {
+      "name": "shadcn",
+      "command": ["npx", "shadcn@latest", "mcp"]
+    }
+  ]
+}
