@@ -43,6 +43,7 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
   - Use **Axios** (`utils/api.ts`) for all HTTP requests.
   - Use **TanStack React Query** for data fetching hooks (queries/mutations).
   - Use **TanStack React Form** for complex form handling.
+  - Use **nuqs** for all URL query parameter state management. Never use `useSearchParams`, `URLSearchParams`, or manual `router.push`/`router.replace` with query strings directly. Instead, use `useQueryState` or `useQueryStates` from `nuqs` to read and write query params with type-safe parsers.
 
 ### React & JSX
 
