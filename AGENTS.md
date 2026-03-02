@@ -97,6 +97,7 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 
 ### Security
 
+- **NEVER read, open, print, log, or explore `.env`, `.env.*`, or any environment variable files.** These files contain secrets and must not be accessed, displayed, or referenced in any output. If you need to know which env vars exist, ask the user — do not attempt to discover them yourself.
 - Add `rel="noopener"` when using `target="_blank"` on links
 - Avoid `dangerouslySetInnerHTML` unless absolutely necessary
 - Don't use `eval()` or assign directly to `document.cookie`
